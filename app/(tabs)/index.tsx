@@ -1,17 +1,22 @@
 // npx expo start
 
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Image source={require('../../assets/sterne.jpg')} style={styles.backgroundImage} />
-      <Text style={styles.title}>SYSTEM STATUS</Text>
-      <Text style={styles.subtitle}>ALL SYSTEMS OPERATIONAL</Text>
-      <View style={styles.card}>
-        <Text style={styles.cardText}>No new anomalies detected.</Text>
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      <View style={styles.imageContainer}>
+        <Image source={require('../../assets/sterne.jpg')} style={styles.headerImage} />
       </View>
-    </View>
+      
+      <View style={styles.textContainer}>
+        <Text style={styles.appName}>NASA ANOMALY MONITOR</Text>
+        <Text style={styles.title}>Home</Text>
+        <Text style={styles.subtitle}>
+          Review the mission status, recent activity, and the most important anomaly alerts in one place.
+        </Text>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -19,50 +24,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#040714', // very dark blue (almost black)
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
   },
-  backgroundImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
+  contentContainer: {
+    paddingBottom: 40,
+  },
+  imageContainer: {
+    width: '100%',
+    height: 250,
+  },
+  headerImage: {
     width: '100%',
     height: '100%',
-    opacity: 0.3, // slight transparency to keep text readable
     resizeMode: 'cover',
   },
+  textContainer: {
+    padding: 24,
+  },
+  appName: {
+    color: '#00d1ff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+    marginBottom: 8,
+  },
   title: {
-    color: '#00d1ff', // neon blue / cyan
-    fontSize: 28,
-    fontWeight: '800',
-    letterSpacing: 4,
-    marginBottom: 10,
+    color: '#ffffff', // changed to white for better hierarchy
+    fontSize: 32,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    marginBottom: 16,
   },
   subtitle: {
-    color: '#435b83', // grey-blue
-    fontSize: 14,
-    letterSpacing: 2,
-    marginBottom: 40,
-  },
-  card: {
-    backgroundColor: '#0a0f24',
-    borderColor: '#00d1ff',
-    borderWidth: 1,
-    padding: 30,
-    borderRadius: 12,
-    shadowColor: '#00d1ff',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    elevation: 8,
-    width: '100%',
-    alignItems: 'center',
-  },
-  cardText: {
-    color: '#e0e0e0', // light grey
+    color: '#a0b0c0', // light grey-blue
     fontSize: 16,
-    letterSpacing: 1,
+    lineHeight: 24,
+    letterSpacing: 0.5,
   },
 });
 
