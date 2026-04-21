@@ -1,9 +1,16 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
+import { useAnomalies } from '../../context/AnomalyContext';
 
 export default function NewAnomalyScreen() {
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [image, setImage] = useState<string | null>(null);
+  
+  const { addAnomaly } = useAnomalies();
+  const router = useRouter();
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -18,6 +25,30 @@ export default function NewAnomalyScreen() {
     }
   };
 
+  const handleSave = () => {
+    if (!name.trim() || !description.trim() || !image) {
+      Alert.alert(
+        "Missing Information", 
+        "Please provide a name, description, and an image to report a new anomaly."
+      );
+      return;
+    }
+
+    addAnomaly({
+      title: name.trim(),
+      description: description.trim(),
+      imageUri: image,
+    });
+
+    // Reset fields
+    setName('');
+    setDescription('');
+    setImage(null);
+
+    // Redirect to "My Anomalies" screen
+    router.push('/(tabs)/myanomalies');
+  };
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <Text style={styles.subtitle}>CREATE A REPORT</Text>
@@ -28,7 +59,9 @@ export default function NewAnomalyScreen() {
         <TextInput 
           style={styles.input} 
           placeholder="Anomaly name" 
-          placeholderTextColor="#435b83" 
+          placeholderTextColor="#435b83"
+          value={name}
+          onChangeText={setName}
         />
       </View>
 
@@ -38,7 +71,9 @@ export default function NewAnomalyScreen() {
           style={[styles.input, styles.textArea]} 
           multiline 
           placeholder="Describe the anomaly" 
-          placeholderTextColor="#435b83" 
+          placeholderTextColor="#435b83"
+          value={description}
+          onChangeText={setDescription}
         />
       </View>
 
@@ -53,7 +88,7 @@ export default function NewAnomalyScreen() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Save Anomaly</Text>
       </TouchableOpacity>
     </ScrollView>
