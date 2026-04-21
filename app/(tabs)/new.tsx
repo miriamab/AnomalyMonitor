@@ -3,7 +3,9 @@ import { View, Text, StyleSheet } from 'react-native';
 export default function NewAnomalyScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>REPORT NEW</Text>
+      <Text style={styles.subtitle}>CREATE A REPORT</Text>
+      <Text style={styles.title}>New Anomaly</Text>
+      
       <View style={styles.card}>
         <Text style={styles.cardText}>Initialize scan to report anomaly...</Text>
       </View>
@@ -15,16 +17,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#040714',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    padding: 24,
+    paddingTop: 60, // extra padding for the top
+  },
+  subtitle: {
+    color: '#00d1ff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+    marginBottom: 0,
   },
   title: {
-    color: '#00d1ff',
-    fontSize: 24,
+    color: '#ffffff',
+    fontSize: 32,
     fontWeight: 'bold',
-    letterSpacing: 3,
-    marginBottom: 40,
+    letterSpacing: 1,
+    marginBottom: 24,
   },
   card: {
     backgroundColor: '#0a0f24',
@@ -35,6 +43,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
+    marginTop: 20,
   },
   cardText: {
     color: '#435b83',
