@@ -1,29 +1,36 @@
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import { useAnomalies } from '../../context/AnomalyContext';
 
+// Screen displaying user's saved/reported anomalies
 export default function MyAnomaliesScreen() {
-  const { anomalies } = useAnomalies();
+  const { anomalies } = useAnomalies(); // Load the list of saved anomalies
 
   return (
     <View style={styles.container}>
       <Text style={styles.subtitle}>ASSIGNED TO YOU</Text>
       <Text style={styles.title}>My Anomalies</Text>
+      
+      {/* Show empty state message if there are no anomalies saved */}
       {anomalies.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>No anomalies</Text>
         </View>
       ) : (
+        // FlatList efficiently renders a scrolling list of items
         <FlatList
           data={anomalies}
           keyExtractor={(item) => item.id}
+          // Method to render each single item layout
           renderItem={({ item }) => (
             <View style={styles.listItem}>
+              {/* Only show image if it exists */}
               {item.imageUri && (
                 <Image source={{ uri: item.imageUri }} style={styles.itemImage} />
               )}
               <View style={styles.itemContent}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
                 <Text style={styles.itemDescription}>{item.description}</Text>
+                {/* Format and display date neatly */}
                 <Text style={styles.itemDate}>
                   {new Date(item.date).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                 </Text>

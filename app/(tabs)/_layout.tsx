@@ -1,11 +1,12 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
+// This layout controls the bottom tab navigation bar
 export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        headerShown: false, // Hide top headers
         headerStyle: {
           backgroundColor: '#0a0f24', // dark, futuristic blue
           shadowColor: 'transparent',
@@ -23,10 +24,12 @@ export default function TabsLayout() {
           paddingBottom: 10,
           paddingTop: 10,
         },
+        // Active and inactive styles for the bottom tabs
         tabBarActiveTintColor: '#00d1ff', // active
         tabBarInactiveTintColor: '#435b83', // inactive (dimmed blue-grey)
       }}
     >
+      {/* Individual tab screens representing main pages */}
       <Tabs.Screen
         name="index"
         options={{

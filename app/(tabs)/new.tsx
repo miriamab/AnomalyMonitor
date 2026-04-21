@@ -4,34 +4,41 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useAnomalies } from '../../context/AnomalyContext';
 
+// Form screen to let the user create a custom anomaly report
 export default function NewAnomalyScreen() {
+  // Local state to store form inputs
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<string | null>(null);
   
+  // Track validation errors
   const [errors, setErrors] = useState({ name: '', description: '', image: '' });
 
   const { addAnomaly } = useAnomalies();
-  const router = useRouter();
+  const router = useRouter(); // Tool to navigate between screens
 
+  // Opens the user's gallery to pick a picture
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+    // Basic image picker launch without detailed permission requests (works on latest mostly)
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
-      allowsEditing: true,
-      quality: 1,
+      allowsEditing: true, // Let them crop
+      quality: 1, // Best quality image
     });
 
+    // If they picked an image, save it
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      setErrors(prev => ({ ...prev, image: '' }));
+      setErrors(prev => ({ ...prev, image: '' })); // Clear image error
     }
   };
 
+  // Validates data and submits if correct
   const handleSave = () => {
     let hasError = false;
     const newErrors = { name: '', description: '', image: '' };
 
+    // Check for empty fields
     if (!name.trim()) {
       newErrors.name = 'Please provide a name';
       hasError = true;
@@ -47,21 +54,23 @@ export default function NewAnomalyScreen() {
 
     setErrors(newErrors);
 
+    // Stop execution if there are errors
     if (hasError) return;
 
+    // Send valid data to context
     addAnomaly({
       title: name.trim(),
       description: description.trim(),
       imageUri: image,
     });
 
-    // Reset fields
+    // Reset fields for the next time
     setName('');
     setDescription('');
     setImage(null);
     setErrors({ name: '', description: '', image: '' });
 
-    // Redirect to "My Anomalies" screen
+    // Redirect user to "My Anomalies" screen after saving
     router.push('/(tabs)/myanomalies');
   };
 

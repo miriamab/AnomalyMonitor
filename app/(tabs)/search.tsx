@@ -12,6 +12,7 @@ interface ApodData {
   copyright?: string;
 }
 
+// Fallback default data used when the NASA API fails
 const MOCK_APOD: ApodData = {
   title: '[PLACEHOLDER] Andromeda Galaxy',
   explanation: 'This is a placeholder entry because the NASA API rate limit was reached. You can use this dummy data to continue formatting and designing the UI. The Andromeda Galaxy (M31) is the closest large spiral galaxy to our Milky Way.',
@@ -20,10 +21,12 @@ const MOCK_APOD: ApodData = {
   copyright: 'NASA / ESA'
 };
 
+// Screen to let users search through NASA's Astronomy Picture of the Day (APOD)
 export default function SearchScreen() {
   const [results, setResults] = useState<ApodData[]>([]);
   const [loading, setLoading] = useState(true);
   
+  // Date picker states
   const [fromDate, setFromDate] = useState<Date | null>(null);
   const [toDate, setToDate] = useState<Date | null>(null);
   const [showFromPicker, setShowFromPicker] = useState(false);
@@ -34,6 +37,7 @@ export default function SearchScreen() {
   const { addAnomaly } = useAnomalies();
   const router = useRouter();
 
+  // Function to save the currently viewed external entry to our local list
   const handleSaveAnomaly = () => {
     if (selectedItem) {
       addAnomaly({
@@ -41,27 +45,31 @@ export default function SearchScreen() {
         description: selectedItem.explanation,
         imageUri: selectedItem.url,
       });
-      setSelectedItem(null); // Close the modal
-      router.push('/(tabs)/myanomalies'); // Navigate to My Anomalies
+      setSelectedItem(null); // Close the detail modal
+      router.push('/(tabs)/myanomalies'); // Go to list of saved items
     }
   };
 
+  // Convert Date object into simple string (YYYY-MM-DD) for NASA API format requirements
   const formatDate = (date: Date | null) => {
     if (!date) return 'YYYY-MM-DD';
-    return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD format
+    return date.toISOString().split('T')[0]; // Grabs the YYYY-MM-DD part
   };
 
+  // Async function to request external data from the NASA APOD API
   const fetchApodData = async (url: string) => {
-    setLoading(true);
+    setLoading(true); // Indicate loading state for the UI
     try {
       const res = await fetch(url);
       const text = await res.text();
       try {
         const data = JSON.parse(text);
+        // Fallback for API limits ("DEMO_KEY" is easily maxed out)
         if (data.error || data.code) {
           Alert.alert('NASA API Limit Reached', 'Displaying placeholder data to continue design work.');
           setResults([MOCK_APOD]);
         } else {
+          // If the data is fine, confirm that it's in a list
           setResults(Array.isArray(data) ? data : [data]);
         }
       } catch (parseError) {
@@ -74,25 +82,27 @@ export default function SearchScreen() {
       Alert.alert('Network Error', 'Could not connect. Displaying placeholder data.');
       setResults([MOCK_APOD]);
     } finally {
+      // Turn off loading once process finishes
       setLoading(false);
     }
   };
 
+  // Fetch an initial set of 2 items exactly when the screen loads the first time
   useEffect(() => {
-    // Initial fetch of 5 random records
-    fetchApodData('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=5');
+    fetchApodData('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=2');
   }, []);
 
+  // When search is pressed, handle custom dates if available
   const handleSearch = () => {
     if (!fromDate || !toDate) {
-      // Fallback to fetching 5 random records if no dates are provided
-      fetchApodData('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=5');
+      // Fallback to random if user didn't pick both dates
+      fetchApodData('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&count=2');
       return;
     }
+    
+    // Create the search URL for specific date ranges
     const startStr = formatDate(fromDate);
     const endStr = formatDate(toDate);
-    
-    // Using start_date and end_date for filtering
     const searchUrl = `https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&start_date=${startStr}&end_date=${endStr}`;
     fetchApodData(searchUrl);
   };

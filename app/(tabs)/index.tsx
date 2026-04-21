@@ -4,18 +4,23 @@ import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAnomalies } from '../../context/AnomalyContext';
 
+// The main landing screen of the app
 export default function HomeScreen() {
-  const { anomalies, starCount } = useAnomalies();
+  const { anomalies, starCount } = useAnomalies(); // Load star score from context
 
   return (
+    // ScrollView allows the page to scroll if content gets too long
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={styles.imageContainer}>
-        <Image source={require('../../assets/sterne.jpg')} style={styles.headerImage} />
+        {/* Header background image */}
+        <Image source={require('../../assets/stars.jpg')} style={styles.headerImage} />
       </View>
       
       <View style={styles.textContainer}>
         <View style={styles.headerRow}>
           <Text style={styles.appName}>NASA ANOMALY MONITOR</Text>
+          
+          {/* Displays the total amount of stars the user caught */}
           <View style={styles.starCounterContainer}>
             <Ionicons name="star" size={16} color="#00d1ff" />
             <Text style={styles.starCounterText}>{starCount}</Text>
