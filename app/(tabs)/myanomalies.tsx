@@ -9,7 +9,7 @@ export default function MyAnomaliesScreen() {
       <Text style={styles.title}>MY ANOMALIES</Text>
       {anomalies.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No anomalies reported yet.</Text>
+          <Text style={styles.emptyText}>No anomalies</Text>
         </View>
       ) : (
         <FlatList

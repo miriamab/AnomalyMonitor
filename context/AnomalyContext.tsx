@@ -16,22 +16,7 @@ interface AnomalyContextType {
 const AnomalyContext = createContext<AnomalyContextType | undefined>(undefined);
 
 export function AnomalyProvider({ children }: { children: ReactNode }) {
-  const [anomalies, setAnomalies] = useState<Anomaly[]>([
-    { 
-      id: '1', 
-      title: 'Sector 7 Disturbance', 
-      description: 'Unusual readings in the upper atmosphere.', 
-      imageUri: null, 
-      date: new Date().toISOString() 
-    },
-    { 
-      id: '2', 
-      title: 'Thermal Fluctuation', 
-      description: 'Heat signatures detected outside normal parameters.', 
-      imageUri: null, 
-      date: new Date().toISOString() 
-    },
-  ]);
+  const [anomalies, setAnomalies] = useState<Anomaly[]>([]);
 
   const addAnomaly = (anomaly: Omit<Anomaly, 'id' | 'date'>) => {
     const newAnomaly: Anomaly = {

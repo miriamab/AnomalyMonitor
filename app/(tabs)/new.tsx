@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useAnomalies } from '../../context/AnomalyContext';
@@ -9,6 +9,8 @@ export default function NewAnomalyScreen() {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<string | null>(null);
   
+  const [errors, setErrors] = useState({ name: '', description: '', image: '' });
+
   const { addAnomaly } = useAnomalies();
   const router = useRouter();
 
@@ -22,17 +24,30 @@ export default function NewAnomalyScreen() {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      setErrors(prev => ({ ...prev, image: '' }));
     }
   };
 
   const handleSave = () => {
-    if (!name.trim() || !description.trim() || !image) {
-      Alert.alert(
-        "Missing Information", 
-        "Please provide a name, description, and an image to report a new anomaly."
-      );
-      return;
+    let hasError = false;
+    const newErrors = { name: '', description: '', image: '' };
+
+    if (!name.trim()) {
+      newErrors.name = 'Please provide a name';
+      hasError = true;
     }
+    if (!description.trim()) {
+      newErrors.description = 'Please provide a description';
+      hasError = true;
+    }
+    if (!image) {
+      newErrors.image = 'Please select an image';
+      hasError = true;
+    }
+
+    setErrors(newErrors);
+
+    if (hasError) return;
 
     addAnomaly({
       title: name.trim(),
@@ -44,6 +59,7 @@ export default function NewAnomalyScreen() {
     setName('');
     setDescription('');
     setImage(null);
+    setErrors({ name: '', description: '', image: '' });
 
     // Redirect to "My Anomalies" screen
     router.push('/(tabs)/myanomalies');
@@ -57,35 +73,41 @@ export default function NewAnomalyScreen() {
       <View style={styles.formGroup}>
         <Text style={styles.label}>NAME</Text>
         <TextInput 
-          style={styles.input} 
+          style={[styles.input, errors.name ? styles.inputError : null]} 
           placeholder="Anomaly name" 
           placeholderTextColor="#435b83"
           value={name}
-          onChangeText={setName}
+          onChangeText={(text) => { setName(text); setErrors(prev => ({...prev, name: ''})); }}
         />
+        {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
       </View>
 
       <View style={styles.formGroup}>
         <Text style={styles.label}>DESCRIPTION</Text>
         <TextInput 
-          style={[styles.input, styles.textArea]} 
+          style={[styles.input, styles.textArea, errors.description ? styles.inputError : null]} 
           multiline 
           placeholder="Describe the anomaly" 
           placeholderTextColor="#435b83"
           value={description}
-          onChangeText={setDescription}
+          onChangeText={(text) => { setDescription(text); setErrors(prev => ({...prev, description: ''})); }}
         />
+        {errors.description ? <Text style={styles.errorText}>{errors.description}</Text> : null}
       </View>
 
       <View style={styles.formGroup}>
         <Text style={styles.label}>IMAGE</Text>
-        <TouchableOpacity style={styles.imageBox} onPress={pickImage}>
+        <TouchableOpacity 
+          style={[styles.imageBox, errors.image ? styles.imageBoxError : null]} 
+          onPress={pickImage}
+        >
           {image ? (
             <Image source={{ uri: image }} style={styles.selectedImage} />
           ) : (
             <Text style={styles.imageBoxText}>+ Add Image</Text>
           )}
         </TouchableOpacity>
+        {errors.image ? <Text style={styles.errorText}>{errors.image}</Text> : null}
       </View>
 
       <TouchableOpacity style={styles.button} onPress={handleSave}>
@@ -138,6 +160,9 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
   },
+  inputError: {
+    borderColor: '#ff4d4d',
+  },
   textArea: {
     height: 120,
     textAlignVertical: 'top',
@@ -152,6 +177,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  imageBoxError: {
+    borderColor: '#ff4d4d',
+  },
   imageBoxText: {
     color: '#00d1ff',
     fontSize: 16,
@@ -163,6 +191,12 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 8,
     resizeMode: 'cover',
+  },
+  errorText: {
+    color: '#ff4d4d',
+    fontSize: 12,
+    marginTop: 6,
+    marginLeft: 4,
   },
   button: {
     backgroundColor: '#00d1ff',
