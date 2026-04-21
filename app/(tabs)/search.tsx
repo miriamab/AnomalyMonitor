@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, TextInput } from 'react-native';
 export default function SearchScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>DATABASE SEARCH</Text>
+      <Text style={styles.subtitle}>EXPLORE RECORDS</Text>
+      <Text style={styles.title}>APOD Search</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -19,16 +20,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#040714',
-    alignItems: 'center',
     paddingTop: 60,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
   },
-  title: {
+  subtitle: {
     color: '#00d1ff',
-    fontSize: 24,
+    fontSize: 14,
     fontWeight: 'bold',
     letterSpacing: 2,
-    marginBottom: 30,
+    marginBottom: 0,
+  },
+  title: {
+    color: '#ffffff',
+    fontSize: 32,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    marginBottom: 24,
   },
   inputContainer: {
     width: '100%',
