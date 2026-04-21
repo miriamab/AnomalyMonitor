@@ -1,6 +1,23 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function NewAnomalyScreen() {
+  const [image, setImage] = useState<string | null>(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <Text style={styles.subtitle}>CREATE A REPORT</Text>
@@ -27,8 +44,12 @@ export default function NewAnomalyScreen() {
 
       <View style={styles.formGroup}>
         <Text style={styles.label}>IMAGE</Text>
-        <TouchableOpacity style={styles.imageBox}>
-          <Text style={styles.imageBoxText}>+ Add Image</Text>
+        <TouchableOpacity style={styles.imageBox} onPress={pickImage}>
+          {image ? (
+            <Image source={{ uri: image }} style={styles.selectedImage} />
+          ) : (
+            <Text style={styles.imageBoxText}>+ Add Image</Text>
+          )}
         </TouchableOpacity>
       </View>
 
@@ -101,6 +122,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     letterSpacing: 0.5,
+  },
+  selectedImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+    resizeMode: 'cover',
   },
   button: {
     backgroundColor: '#00d1ff',
