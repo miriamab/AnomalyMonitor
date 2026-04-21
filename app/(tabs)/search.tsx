@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, ScrollView, ActivityIndicator, TouchableOpacity, Alert, Platform, Modal, Pressable } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useAnomalies } from '../../context/AnomalyContext';
+import { useRouter } from 'expo-router';
 
 interface ApodData {
   title: string;
@@ -28,6 +30,21 @@ export default function SearchScreen() {
   const [showToPicker, setShowToPicker] = useState(false);
 
   const [selectedItem, setSelectedItem] = useState<ApodData | null>(null);
+
+  const { addAnomaly } = useAnomalies();
+  const router = useRouter();
+
+  const handleSaveAnomaly = () => {
+    if (selectedItem) {
+      addAnomaly({
+        title: selectedItem.title,
+        description: selectedItem.explanation,
+        imageUri: selectedItem.url,
+      });
+      setSelectedItem(null); // Close the modal
+      router.push('/(tabs)/myanomalies'); // Navigate to My Anomalies
+    }
+  };
 
   const formatDate = (date: Date | null) => {
     if (!date) return 'YYYY-MM-DD';
@@ -189,6 +206,13 @@ export default function SearchScreen() {
               <ScrollView style={styles.modalDescContainer}>
                 <Text style={styles.modalDescription}>{selectedItem.explanation}</Text>
               </ScrollView>
+              
+              <TouchableOpacity 
+                style={styles.saveButton} 
+                onPress={handleSaveAnomaly}
+              >
+                <Text style={styles.saveButtonText}>Save to My Anomalies</Text>
+              </TouchableOpacity>
             </Pressable>
           </Pressable>
         </Modal>
@@ -375,5 +399,20 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 14,
     lineHeight: 24,
+  },
+  saveButton: {
+    backgroundColor: '#00d1ff',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 20, // space from description
+  },
+  saveButtonText: {
+    color: '#040714',
+    fontSize: 16,
+    fontWeight: 'bold',
+    letterSpacing: 1,
   },
 });
