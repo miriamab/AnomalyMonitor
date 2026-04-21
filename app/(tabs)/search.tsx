@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, ScrollView, ActivityIndicator, TouchableOpacity, Alert, Platform } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image, ScrollView, ActivityIndicator, TouchableOpacity, Alert, Platform, Modal, Pressable } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface ApodData {
@@ -7,13 +7,15 @@ interface ApodData {
   explanation: string;
   url: string;
   date: string;
+  copyright?: string;
 }
 
 const MOCK_APOD: ApodData = {
   title: '[PLACEHOLDER] Andromeda Galaxy',
   explanation: 'This is a placeholder entry because the NASA API rate limit was reached. You can use this dummy data to continue formatting and designing the UI. The Andromeda Galaxy (M31) is the closest large spiral galaxy to our Milky Way.',
   url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/NGC_4414_%28NASA-med%29.jpg/800px-NGC_4414_%28NASA-med%29.jpg',
-  date: '2026-04-21'
+  date: '2026-04-21',
+  copyright: 'NASA / ESA'
 };
 
 export default function SearchScreen() {
@@ -24,6 +26,8 @@ export default function SearchScreen() {
   const [toDate, setToDate] = useState<Date | null>(null);
   const [showFromPicker, setShowFromPicker] = useState(false);
   const [showToPicker, setShowToPicker] = useState(false);
+
+  const [selectedItem, setSelectedItem] = useState<ApodData | null>(null);
 
   const formatDate = (date: Date | null) => {
     if (!date) return 'YYYY-MM-DD';
@@ -150,7 +154,7 @@ export default function SearchScreen() {
       ) : (
         <ScrollView style={styles.resultsContainer} contentContainerStyle={styles.resultsContent}>
           {results.map((item, index) => (
-            <View key={index} style={styles.card}>
+            <TouchableOpacity key={index} style={styles.card} onPress={() => setSelectedItem(item)}>
               <Image source={{ uri: item.url }} style={styles.cardImage} />
               <View style={styles.cardContent}>
                 <Text style={styles.cardDate}>
@@ -159,9 +163,35 @@ export default function SearchScreen() {
                 <Text style={styles.cardTitle} numberOfLines={1}>{item.title}</Text>
                 <Text style={styles.cardDescription} numberOfLines={2}>{item.explanation}</Text>
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
+      )}
+
+      {selectedItem && (
+        <Modal
+          visible={!!selectedItem}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setSelectedItem(null)}
+          statusBarTranslucent={true}
+        >
+          <Pressable style={styles.modalOverlay} onPress={() => setSelectedItem(null)}>
+            <Pressable style={styles.modalContent} onPress={() => setSelectedItem(null)}>
+              <Text style={styles.modalDate}>
+                {new Date(selectedItem.date).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </Text>
+              <Image source={{ uri: selectedItem.url }} style={styles.modalImage} />
+              <Text style={styles.recordTitle}>{selectedItem.title}</Text>
+              {selectedItem.copyright && (
+                <Text style={styles.modalCredits}>Credit: {selectedItem.copyright}</Text>
+              )}
+              <ScrollView style={styles.modalDescContainer}>
+                <Text style={styles.modalDescription}>{selectedItem.explanation}</Text>
+              </ScrollView>
+            </Pressable>
+          </Pressable>
+        </Modal>
       )}
     </View>
   );
@@ -290,5 +320,60 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 12,
     lineHeight: 18,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(4, 7, 20, 0.85)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#0a0f24',
+    borderColor: '#435b83',
+    borderWidth: 1,
+    borderRadius: 12,
+    width: '100%',
+    maxHeight: '80%',
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalDate: {
+    color: '#a0b0c0',
+    fontSize: 12,
+    letterSpacing: 1,
+    marginBottom: 12,
+    textTransform: 'uppercase',
+    alignSelf: 'flex-start',
+  },
+  modalImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 16,
+    resizeMode: 'cover',
+  },
+  recordTitle: {
+    color: '#00d1ff',
+    fontSize: 22,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  modalCredits: {
+    color: '#a0b0c0',
+    fontSize: 12,
+    fontStyle: 'italic',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  modalDescContainer: {
+    width: '100%',
+  },
+  modalDescription: {
+    color: '#ffffff',
+    fontSize: 14,
+    lineHeight: 24,
   },
 });
