@@ -1,4 +1,5 @@
 This is the repository for the 'Anomaly Monitor' 
 
--> Course: 'Mobile Anwendungen'
--> Sommersemester 2026
+> Course: 'Mobile Anwendungen'
+> 
+> Summer semester 2026
