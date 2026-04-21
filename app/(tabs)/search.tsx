@@ -153,11 +153,11 @@ export default function SearchScreen() {
             <View key={index} style={styles.card}>
               <Image source={{ uri: item.url }} style={styles.cardImage} />
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{item.title}</Text>
                 <Text style={styles.cardDate}>
                   {new Date(item.date).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                 </Text>
-                <Text style={styles.cardDescription} numberOfLines={3}>{item.explanation}</Text>
+                <Text style={styles.cardTitle} numberOfLines={1}>{item.title}</Text>
+                <Text style={styles.cardDescription} numberOfLines={2}>{item.explanation}</Text>
               </View>
             </View>
           ))}
@@ -258,32 +258,37 @@ const styles = StyleSheet.create({
     borderColor: '#435b83',
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 24,
+    marginBottom: 16,
     overflow: 'hidden',
+    flexDirection: 'row',
+    height: 120,
   },
   cardImage: {
-    width: '100%',
-    height: 160,
+    width: 110,
+    height: '100%',
   },
   cardContent: {
-    padding: 16,
-  },
-  cardTitle: {
-    color: '#00d1ff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    letterSpacing: 1.2,
-    marginBottom: 4,
+    flex: 1,
+    padding: 12,
+    justifyContent: 'center',
   },
   cardDate: {
     color: '#a0b0c0',
-    fontSize: 12,
+    fontSize: 10,
     letterSpacing: 1,
-    marginBottom: 12,
+    marginBottom: 4,
+    textTransform: 'uppercase',
+  },
+  cardTitle: {
+    color: '#00d1ff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+    marginBottom: 6,
   },
   cardDescription: {
     color: '#ffffff',
-    fontSize: 14,
-    lineHeight: 22,
+    fontSize: 12,
+    lineHeight: 18,
   },
 });
