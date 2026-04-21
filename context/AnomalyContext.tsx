@@ -11,12 +11,15 @@ export interface Anomaly {
 interface AnomalyContextType {
   anomalies: Anomaly[];
   addAnomaly: (anomaly: Omit<Anomaly, 'id' | 'date'>) => void;
+  starCount: number;
+  incrementStarCount: () => void;
 }
 
 const AnomalyContext = createContext<AnomalyContextType | undefined>(undefined);
 
 export function AnomalyProvider({ children }: { children: ReactNode }) {
   const [anomalies, setAnomalies] = useState<Anomaly[]>([]);
+  const [starCount, setStarCount] = useState(0);
 
   const addAnomaly = (anomaly: Omit<Anomaly, 'id' | 'date'>) => {
     const newAnomaly: Anomaly = {
@@ -28,8 +31,12 @@ export function AnomalyProvider({ children }: { children: ReactNode }) {
     setAnomalies([newAnomaly, ...anomalies]);
   };
 
+  const incrementStarCount = () => {
+    setStarCount((prev) => prev + 1);
+  };
+
   return (
-    <AnomalyContext.Provider value={{ anomalies, addAnomaly }}>
+    <AnomalyContext.Provider value={{ anomalies, addAnomaly, starCount, incrementStarCount }}>
       {children}
     </AnomalyContext.Provider>
   );

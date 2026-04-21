@@ -1,8 +1,12 @@
 // npx expo start
 
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useAnomalies } from '../../context/AnomalyContext';
 
 export default function HomeScreen() {
+  const { anomalies, starCount } = useAnomalies();
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={styles.imageContainer}>
@@ -10,7 +14,13 @@ export default function HomeScreen() {
       </View>
       
       <View style={styles.textContainer}>
-        <Text style={styles.appName}>NASA ANOMALY MONITOR</Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.appName}>NASA ANOMALY MONITOR</Text>
+          <View style={styles.starCounterContainer}>
+            <Ionicons name="sparkles" size={16} color="#00d1ff" />
+            <Text style={styles.starCounterText}>{starCount}</Text>
+          </View>
+        </View>
         <Text style={styles.title}>Home</Text>
         <Text style={styles.subtitle}>
           Review the mission status, recent activity, and the most important anomaly alerts in one place.
@@ -40,12 +50,33 @@ const styles = StyleSheet.create({
   textContainer: {
     padding: 24,
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  starCounterContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0a0f24',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#435b83',
+  },
+  starCounterText: {
+    color: '#00d1ff',
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginLeft: 6,
+  },
   appName: {
     color: '#00d1ff',
     fontSize: 14,
     fontWeight: 'bold',
     letterSpacing: 2,
-    marginBottom: 16,
   },
   title: {
     color: '#ffffff', // changed to white for better hierarchy
