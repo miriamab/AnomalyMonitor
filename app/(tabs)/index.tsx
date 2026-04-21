@@ -17,7 +17,7 @@ export default function HomeScreen() {
         <View style={styles.headerRow}>
           <Text style={styles.appName}>NASA ANOMALY MONITOR</Text>
           <View style={styles.starCounterContainer}>
-            <Ionicons name="sparkles" size={16} color="#00d1ff" />
+            <Ionicons name="star" size={16} color="#00d1ff" />
             <Text style={styles.starCounterText}>{starCount}</Text>
           </View>
         </View>
