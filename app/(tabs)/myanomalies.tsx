@@ -6,7 +6,8 @@ export default function MyAnomaliesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>MY ANOMALIES</Text>
+      <Text style={styles.subtitle}>ASSIGNED TO YOU</Text>
+      <Text style={styles.title}>My Anomalies</Text>
       {anomalies.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>No anomalies</Text>
@@ -22,8 +23,9 @@ export default function MyAnomaliesScreen() {
               )}
               <View style={styles.itemContent}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
-                <Text style={styles.itemDescription} numberOfLines={2}>
-                  {item.description}
+                <Text style={styles.itemDescription}>{item.description}</Text>
+                <Text style={styles.itemDate}>
+                  {new Date(item.date).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                 </Text>
               </View>
             </View>
@@ -41,15 +43,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#040714',
     paddingTop: 60,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
+  },
+  subtitle: {
+    color: '#00d1ff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+    marginBottom: 0,
   },
   title: {
-    color: '#00d1ff',
-    fontSize: 24,
+    color: '#ffffff',
+    fontSize: 32,
     fontWeight: 'bold',
-    letterSpacing: 3,
-    marginBottom: 30,
-    alignSelf: 'center',
+    letterSpacing: 1,
+    marginBottom: 24,
   },
   emptyContainer: {
     flex: 1,
@@ -66,29 +74,32 @@ const styles = StyleSheet.create({
     borderColor: '#435b83',
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 15,
+    marginBottom: 24,
     overflow: 'hidden',
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   itemImage: {
-    width: 80,
-    height: 80,
+    width: '100%',
+    height: 160,
   },
   itemContent: {
-    flex: 1,
     padding: 16,
   },
   itemTitle: {
     color: '#00d1ff',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     letterSpacing: 1.2,
     marginBottom: 4,
   },
   itemDescription: {
+    color: '#ffffff',
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 6,
+  },
+  itemDate: {
     color: '#a0b0c0',
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 12,
+    letterSpacing: 1,
   },
 });
