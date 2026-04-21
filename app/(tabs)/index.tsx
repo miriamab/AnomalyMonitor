@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 250,
+    height: 350,
   },
   headerImage: {
     width: '100%',
@@ -45,19 +45,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     letterSpacing: 2,
-    marginBottom: 8,
+    marginBottom: 16,
   },
   title: {
     color: '#ffffff', // changed to white for better hierarchy
     fontSize: 32,
     fontWeight: 'bold',
     letterSpacing: 1,
-    marginBottom: 16,
+    marginBottom: 24,
   },
   subtitle: {
     color: '#a0b0c0', // light grey-blue
     fontSize: 16,
-    lineHeight: 24,
+    lineHeight: 28,
     letterSpacing: 0.5,
   },
 });
