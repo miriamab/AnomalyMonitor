@@ -213,9 +213,12 @@ export default function SearchScreen() {
               {selectedItem.copyright && (
                 <Text style={styles.modalCredits}>Credit: {selectedItem.copyright}</Text>
               )}
-              <ScrollView style={styles.modalDescContainer}>
-                <Text style={styles.modalDescription}>{selectedItem.explanation}</Text>
-              </ScrollView>
+              {/* Wraps the scroll view to ensure it shrinks and allows scrolling */}
+              <View style={styles.modalDescWrapper}>
+                <ScrollView style={styles.modalDescContainer}>
+                  <Text style={styles.modalDescription}>{selectedItem.explanation}</Text>
+                </ScrollView>
+              </View>
               
               <TouchableOpacity 
                 style={styles.saveButton} 
@@ -368,23 +371,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     width: '100%',
-    maxHeight: '80%',
+    maxHeight: '85%',
     padding: 20,
-    alignItems: 'center',
+    // Provide a standard flex layout to let children negotiate space correctly
+    display: 'flex',
   },
   modalDate: {
     color: '#a0b0c0',
     fontSize: 12,
     letterSpacing: 1,
-    marginBottom: 12,
+    marginBottom: 6,
     textTransform: 'uppercase',
-    alignSelf: 'flex-start',
   },
   modalImage: {
     width: '100%',
-    height: 200,
+    height: 180,
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 12,
     resizeMode: 'cover',
   },
   recordTitle: {
@@ -399,8 +402,13 @@ const styles = StyleSheet.create({
     color: '#a0b0c0',
     fontSize: 12,
     fontStyle: 'italic',
-    marginBottom: 16,
+    marginBottom: 12,
     textAlign: 'center',
+  },
+  modalDescWrapper: {
+    width: '100%',
+    flexShrink: 1, 
+    marginBottom: 20,
   },
   modalDescContainer: {
     width: '100%',
@@ -417,7 +425,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     width: '100%',
-    marginTop: 20, // space from description
+    marginTop: 'auto', // Pushes button to bottom, ensuring space above
   },
   saveButtonText: {
     color: '#040714',

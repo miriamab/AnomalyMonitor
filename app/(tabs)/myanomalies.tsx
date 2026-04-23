@@ -29,7 +29,8 @@ export default function MyAnomaliesScreen() {
               )}
               <View style={styles.itemContent}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
-                <Text style={styles.itemDescription}>{item.description}</Text>
+                {/* Limit the description length so the card doesn't get excessively tall */}
+                <Text style={styles.itemDescription} numberOfLines={3}>{item.description}</Text>
                 {/* Format and display date neatly */}
                 <Text style={styles.itemDate}>
                   {new Date(item.date).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
